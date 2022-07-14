@@ -1,5 +1,5 @@
 {
-  "name": "utils",
+  "name": "a0sandbox",
   "private": true,
   "scripts": {
     "dev": "next dev",
