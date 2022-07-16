@@ -5,4 +5,6 @@ resource "vercel_project" "default" {
     type = "github"
     repo = var.github_repo
   }
+
+  framework = "nextjs"
 }
