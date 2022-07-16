@@ -14,5 +14,5 @@ resource "vercel_project" "default" {
 }
 
 output "project_url" {
-  value = "https://${vercel_project.default.name}.vercel.app"
+  value = "${var.vercel_origin}/"
 }

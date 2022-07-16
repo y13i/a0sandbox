@@ -9,7 +9,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-import CodeIcon from "@mui/icons-material/Code";
+import BadgeIcon from "@mui/icons-material/Badge";
 
 import { CodeTextField } from "../components/CodeTextField";
 import { WithHead } from "../components/WithHead";
@@ -18,10 +18,10 @@ import { PageAttribute } from "../hooks/usePageAttributes";
 import { debounceWait } from "../src/constants";
 
 export const pageAttribute: PageAttribute = {
-  title: "Encode/decode",
-  description: "(En|De)codes Base64, URI, etc.",
-  path: "/encode-decode",
-  icon: <CodeIcon />,
+  title: "ID Token",
+  description: "Shows the ID Token for the authenticated user.",
+  path: "/id-token",
+  icon: <BadgeIcon />,
 };
 
 const _: NextPage = () => {
