@@ -8,9 +8,9 @@ import { usePageAttributes } from "../hooks/usePageAttributes";
 
 const _: NextPage = () => {
   return (
-    <WithHead title="Utils" description="Collection of handy utilities.">
+    <WithHead title="a0sandbox" description="Auth0 testing app.">
       <Typography variant="h1" gutterBottom>
-        Utils
+        a0sandbox
       </Typography>
       {usePageAttributes().map((pa) => (
         <div key={pa.title}>

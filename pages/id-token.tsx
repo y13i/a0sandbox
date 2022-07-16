@@ -1,21 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { NextPage } from "next";
-import { Base64 } from "js-base64";
-import { useDebouncedCallback } from "use-debounce";
-
-import Grid from "@mui/material/Grid";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { useAuth0, IdToken } from "@auth0/auth0-react";
 
 import BadgeIcon from "@mui/icons-material/Badge";
+import LinearProgress from "@mui/material/LinearProgress";
+import Typography from "@mui/material/Typography";
 
 import { CodeTextField } from "../components/CodeTextField";
+import { JsonView } from "../components/JsonView";
 import { WithHead } from "../components/WithHead";
-import { useSearchParamState } from "../hooks/useSearchParamState";
 import { PageAttribute } from "../hooks/usePageAttributes";
-import { debounceWait } from "../src/constants";
 
 export const pageAttribute: PageAttribute = {
   title: "ID Token",
@@ -25,118 +19,40 @@ export const pageAttribute: PageAttribute = {
 };
 
 const _: NextPage = () => {
-  const [encoded, setEncoded] = useState("");
-  const [encodeError, setEncodeError] = useState<Error | undefined>();
-  const [decodeError, setDecodeError] = useState<Error | undefined>();
+  const { isLoading, isAuthenticated, getIdTokenClaims, error, user } =
+    useAuth0();
 
-  const modes = ["Base64", "Base64URI", "URIComponent", "URI"] as const;
+  const [idToken, setIdToken] = useState<IdToken>();
 
-  const [mode, setMode] = useSearchParamState<typeof modes[number]>(
-    modes[0],
-    "m"
-  );
+  useEffect(() => {
+    getIdTokenClaims()
+      .then((idToken) => setIdToken(idToken))
+      .catch((e) => console.error(e));
+  }, [getIdTokenClaims]);
 
-  const encode = useCallback(
-    (string: string) => {
-      if (mode === "Base64") return Base64.encode(string);
-      if (mode === "Base64URI") return Base64.encodeURI(string);
-      if (mode === "URIComponent") return encodeURIComponent(string);
-      if (mode === "URI") return encodeURI(string);
-      return "";
-    },
-    [mode]
-  );
-
-  const decode = (string: string) => {
-    if (mode === "Base64" || mode === "Base64URI") return Base64.decode(string);
-    if (mode === "URIComponent") return decodeURIComponent(string);
-    if (mode === "URI") return decodeURI(string);
-    return "";
-  };
-
-  const [plain, setPlain] = useSearchParamState<string>(
-    "",
-    "d",
-    useCallback(
-      (loadedData: string) => {
-        setEncoded(encode(loadedData));
-      },
-      [encode]
-    )
-  );
-
-  const encodeDebounced = useDebouncedCallback((newPlain) => {
-    try {
-      setEncoded(encode(newPlain));
-      setEncodeError(undefined);
-    } catch (e) {
-      setEncodeError(e as Error);
+  const content = (() => {
+    if (isLoading) {
+      return <LinearProgress />;
     }
-  }, debounceWait);
 
-  const decodeDebounced = useDebouncedCallback((newEncoded) => {
-    try {
-      setPlain(decode(newEncoded));
-      setDecodeError(undefined);
-    } catch (e) {
-      setDecodeError(e as Error);
+    if (!isAuthenticated) {
+      return <Typography variant="h3" gutterBottom></Typography>;
     }
-  }, debounceWait);
 
-  return (
-    <WithHead {...pageAttribute}>
-      <FormControl>
-        <InputLabel id="mode-select-label">Mode</InputLabel>
-        <Select
-          labelId="mode-select-label"
-          value={mode}
-          label="Mode"
-          onChange={(event) => {
-            setMode(event.target.value as typeof modes[number]);
-            encodeDebounced(plain);
-          }}
-        >
-          {modes.map((m) => (
-            <MenuItem key={m} value={m}>
-              {m}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <CodeTextField
-            multiline
-            label="Plain Text"
-            error={!!encodeError}
-            helperText={encodeError?.toString()}
-            value={plain}
-            onChange={(event) => {
-              const newPlain = event.target.value;
+    if (error) {
+      const { name, message, cause, stack } = error;
+      return <JsonView src={{ error: { name, message, cause, stack } }} />;
+    }
 
-              setPlain(newPlain);
-              encodeDebounced(newPlain);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <CodeTextField
-            multiline
-            label={`${mode} Encoded`}
-            error={!!decodeError}
-            helperText={decodeError?.toString()}
-            value={encoded}
-            onChange={(event) => {
-              const newEncoded = event.target.value;
+    return (
+      <>
+        <CodeTextField label="Raw" disabled value={idToken?.__raw} />
+        <JsonView src={typeof user === "object" ? user : {}} />
+      </>
+    );
+  })();
 
-              setEncoded(newEncoded);
-              decodeDebounced(newEncoded);
-            }}
-          />
-        </Grid>
-      </Grid>
-    </WithHead>
-  );
+  return <WithHead {...pageAttribute}>{content}</WithHead>;
 };
 
 export default _;
