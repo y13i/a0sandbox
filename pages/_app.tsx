@@ -21,6 +21,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import LoginIcon from "@mui/icons-material/Login";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { Menu } from "../components/Menu";
 
@@ -77,65 +78,71 @@ function App({ Component, pageProps }: AppProps) {
   const toggleDrawer = () => setOpen(!open);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={createTheme()}>
-        <Box sx={{ display: "flex" }}>
-          <CssBaseline />
-          <AppBar position="absolute" open={open}>
-            <Toolbar
-              sx={{
-                pr: "24px", // keep right padding when drawer closed
-                justifyContent: "space-between",
-              }}
-            >
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                onClick={toggleDrawer}
+    <Auth0Provider
+      domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
+      clientId={process.env.NEXT_PUBLIC_CLIENT_ID!}
+      redirectUri={`${process.env.NEXT_PUBLIC_BASE_URI!}/callback`}
+    >
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={createTheme()}>
+          <Box sx={{ display: "flex" }}>
+            <CssBaseline />
+            <AppBar position="absolute" open={open}>
+              <Toolbar
                 sx={{
-                  mr: 2,
-                  ...(open && { visibility: "hidden" }),
+                  pr: "24px", // keep right padding when drawer closed
+                  justifyContent: "space-between",
                 }}
               >
-                <MenuIcon />
-              </IconButton>
-              <Button color="inherit" startIcon={<LoginIcon />}>
-                TODO: Login
-              </Button>
-            </Toolbar>
-          </AppBar>
-          <Drawer variant="permanent" open={open}>
-            <Toolbar
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                px: [1],
-              }}
+                <IconButton
+                  size="large"
+                  edge="start"
+                  color="inherit"
+                  aria-label="menu"
+                  onClick={toggleDrawer}
+                  sx={{
+                    mr: 2,
+                    ...(open && { visibility: "hidden" }),
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Button color="inherit" startIcon={<LoginIcon />}>
+                  TODO: Login
+                </Button>
+              </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent" open={open}>
+              <Toolbar
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  px: [1],
+                }}
+              >
+                <IconButton>
+                  <Link href="/" passHref>
+                    <HomeIcon />
+                  </Link>
+                </IconButton>
+                <IconButton onClick={toggleDrawer}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <Menu disableTooltip={open} />
+            </Drawer>
+            <Box
+              component="main"
+              sx={{ px: 3, py: 10, flexGrow: 1, overflow: "scroll" }}
             >
-              <IconButton>
-                <Link href="/" passHref>
-                  <HomeIcon />
-                </Link>
-              </IconButton>
-              <IconButton onClick={toggleDrawer}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </Toolbar>
-            <Divider />
-            <Menu disableTooltip={open} />
-          </Drawer>
-          <Box
-            component="main"
-            sx={{ px: 3, py: 10, flexGrow: 1, overflow: "scroll" }}
-          >
-            <Component {...pageProps} />
+              <Component {...pageProps} />
+            </Box>
           </Box>
-        </Box>
-      </ThemeProvider>
-    </QueryClientProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </Auth0Provider>
   );
 }
 
