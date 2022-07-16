@@ -20,7 +20,7 @@ import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-import GitHubIcon from "@mui/icons-material/GitHub";
+import LoginIcon from "@mui/icons-material/Login";
 
 import { Menu } from "../components/Menu";
 
@@ -101,11 +101,9 @@ function App({ Component, pageProps }: AppProps) {
               >
                 <MenuIcon />
               </IconButton>
-              <Link href="https://github.com/y13i/utils" passHref>
-                <Button color="inherit" startIcon={<GitHubIcon />}>
-                  Source Code
-                </Button>
-              </Link>{" "}
+              <Button color="inherit" startIcon={<LoginIcon />}>
+                TODO: Login
+              </Button>
             </Toolbar>
           </AppBar>
           <Drawer variant="permanent" open={open}>
