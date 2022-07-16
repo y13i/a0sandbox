@@ -1,3 +1,7 @@
+provider "vercel" {
+  api_token = var.vercel_api_token
+}
+
 resource "vercel_project" "default" {
   name = terraform.workspace
 
@@ -7,4 +11,8 @@ resource "vercel_project" "default" {
   }
 
   framework = "nextjs"
+}
+
+output "project_url" {
+  value = "https://${data.vercel_project.default.name}.vercel.app"
 }
