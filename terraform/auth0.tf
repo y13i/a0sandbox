@@ -15,9 +15,10 @@ resource "auth0_resource_server" "a0sandbox_backend" {
 }
 
 resource "auth0_client" "a0sandbox_frontend" {
-  name                = "a0sandbox Next.js Frontend"
-  app_type            = "spa"
-  initiate_login_uri  = "https://${terraform.workspace}.vercel.app/login"
-  callbacks           = ["https://${terraform.workspace}.vercel.app/callback"]
-  allowed_logout_urls = ["https://${terraform.workspace}.vercel.app/"]
+  name                       = "a0sandbox Next.js Frontend"
+  app_type                   = "spa"
+  token_endpoint_auth_method = "none"
+  initiate_login_uri         = "https://${terraform.workspace}.vercel.app/login"
+  callbacks                  = ["https://${terraform.workspace}.vercel.app/callback"]
+  allowed_logout_urls        = ["https://${terraform.workspace}.vercel.app/"]
 }
