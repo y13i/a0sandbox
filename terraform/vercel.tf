@@ -14,5 +14,5 @@ resource "vercel_project" "default" {
 }
 
 output "project_url" {
-  value = "${var.vercel_origin}/"
+  value = "https://${terraform.workspace}.vercel.app/"
 }
