@@ -6,3 +6,7 @@ resource "vercel_project" "default" {
     repo = var.github_repo
   }
 }
+
+output "vercel_url" {
+  value = vercel_project.default.url
+}
