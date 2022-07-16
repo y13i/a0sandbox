@@ -36,7 +36,11 @@ const _: NextPage = () => {
     }
 
     if (!isAuthenticated) {
-      return <Typography variant="h3" gutterBottom></Typography>;
+      return (
+        <Typography variant="h3" gutterBottom>
+          Authentication required.
+        </Typography>
+      );
     }
 
     if (error) {
