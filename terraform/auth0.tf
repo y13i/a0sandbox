@@ -22,4 +22,9 @@ resource "auth0_client" "a0sandbox_frontend" {
   initiate_login_uri         = "https://${terraform.workspace}.vercel.app/login"
   callbacks                  = ["https://${terraform.workspace}.vercel.app/callback", "http://localhost:3000/callback"]
   allowed_logout_urls        = ["https://${terraform.workspace}.vercel.app/", "http://localhost:3000/"]
+
+  jwt_configuration {
+    algorithm = "RS256"
+    leeway    = "1m"
+  }
 }
