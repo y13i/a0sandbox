@@ -5,7 +5,7 @@ provider "auth0" {
 }
 
 resource "auth0_connection" "default" {
-  name     = "a0sandbox default"
+  name     = "a0sandbox-default"
   strategy = "auth0"
 }
 
