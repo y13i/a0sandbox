@@ -30,38 +30,38 @@ const _: NextPage = () => {
       .catch((e) => console.error(e));
   }, [getIdTokenClaims]);
 
-  return (
-    <WithHead {...pageAttribute}>
-      <JsonView src={{ isLoading, isAuthenticated, error, user }} />
-    </WithHead>
-  );
-  // const content = (() => {
-  //   if (isLoading) {
-  //     return <LinearProgress />;
-  //   }
+  // return (
+  //   <WithHead {...pageAttribute}>
+  //     <JsonView src={{ isLoading, isAuthenticated, error, user }} />
+  //   </WithHead>
+  // );
+  const content = (() => {
+    if (isLoading) {
+      return <LinearProgress />;
+    }
 
-  //   if (!isAuthenticated) {
-  //     return (
-  //       <Typography variant="h3" gutterBottom>
-  //         Authentication required.
-  //       </Typography>
-  //     );
-  //   }
+    if (!isAuthenticated) {
+      return (
+        <Typography variant="h3" gutterBottom>
+          Authentication required.
+        </Typography>
+      );
+    }
 
-  //   if (error) {
-  //     const { name, message, cause, stack } = error;
-  //     return <JsonView src={{ error: { name, message, cause, stack } }} />;
-  //   }
+    if (error) {
+      const { name, message, cause, stack } = error;
+      return <JsonView src={{ error: { name, message, cause, stack } }} />;
+    }
 
-  //   return (
-  //     <>
-  //       <CodeTextField label="Raw" disabled value={idToken?.__raw} />
-  //       <JsonView src={typeof user === "object" ? user : {}} />
-  //     </>
-  //   );
-  // })();
+    return (
+      <>
+        <CodeTextField label="Raw" disabled value={idToken?.__raw} />
+        <JsonView src={typeof user === "object" ? user : {}} />
+      </>
+    );
+  })();
 
-  // return <WithHead {...pageAttribute}>{content}</WithHead>;
+  return <WithHead {...pageAttribute}>{content}</WithHead>;
 };
 
 export default _;
