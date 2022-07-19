@@ -30,11 +30,6 @@ const _: NextPage = () => {
       .catch((e) => console.error(e));
   }, [getIdTokenClaims]);
 
-  // return (
-  //   <WithHead {...pageAttribute}>
-  //     <JsonView src={{ isLoading, isAuthenticated, error, user }} />
-  //   </WithHead>
-  // );
   const content = (() => {
     if (isLoading) {
       return <LinearProgress />;
