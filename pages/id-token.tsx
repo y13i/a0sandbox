@@ -25,10 +25,12 @@ const _: NextPage = () => {
   const [rawIdToken, setRawIdToken] = useState<string>("");
 
   useEffect(() => {
-    getIdTokenClaims()
-      .then((idToken) => setRawIdToken(idToken?.__raw || ""))
-      .catch((e) => console.error(e));
-  }, [getIdTokenClaims]);
+    if (!isLoading && isAuthenticated) {
+      getIdTokenClaims()
+        .then((idToken) => setRawIdToken(idToken?.__raw || ""))
+        .catch((e) => console.error(e));
+    }
+  }, [isLoading, isAuthenticated, getIdTokenClaims]);
 
   const content = (() => {
     if (isLoading) {
