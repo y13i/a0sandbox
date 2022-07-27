@@ -30,7 +30,7 @@ resource "auth0_client" "a0sandbox_frontend" {
   }
 }
 
-resource "null_resource" "test" {
+resource "null_resource" "test3" {
   provisioner "local-exec" {
     command = "curl https://example.com"
   }
