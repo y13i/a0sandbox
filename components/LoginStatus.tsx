@@ -101,7 +101,7 @@ export const LoginStatus: FC = (props) => {
           <ListItemIcon>
             <LoginIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>default connection</ListItemText>
+          <ListItemText>(specify no connection)</ListItemText>
         </MenuItem>
         <MenuItem
           onClick={() =>
