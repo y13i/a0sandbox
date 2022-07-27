@@ -37,9 +37,6 @@ const _: NextPage = () => {
         .then((idToken) => {
           const jwt = idToken?.__raw as string;
           setRawIdToken(jwt || "");
-          return jwt;
-        })
-        .then((jwt) => {
           return jwtVerify(jwt, jwks);
         })
         .then((jwtVerifyResult) => {
