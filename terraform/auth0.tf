@@ -29,3 +29,9 @@ resource "auth0_client" "a0sandbox_frontend" {
     alg = "RS256"
   }
 }
+
+resource "null_resource" "test" {
+  provisioner "local-exec" {
+    command = "echo test"
+  }
+}
