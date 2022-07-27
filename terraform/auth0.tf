@@ -52,3 +52,24 @@ resource "auth0_client" "a0sandbox_frontend" {
     alg = "RS256"
   }
 }
+
+resource "auth0_action" "post_login" {
+  name    = "post-login"
+  runtime = "node16"
+  code    = file("./auth0/post_login.js")
+  deploy  = true
+
+  supported_triggers {
+    id      = "post-login"
+    version = "v3"
+  }
+}
+
+resource "auth0_trigger_binding" "post_login" {
+  trigger = "post-login"
+
+  actions {
+    id           = auth0_action.post_login.id
+    display_name = auth0_action.post_login.name
+  }
+}
