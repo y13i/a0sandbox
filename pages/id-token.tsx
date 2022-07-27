@@ -22,11 +22,11 @@ const _: NextPage = () => {
   const { isLoading, isAuthenticated, getIdTokenClaims, error, user } =
     useAuth0();
 
-  const [idToken, setIdToken] = useState<IdToken>();
+  const [rawIdToken, setRawIdToken] = useState<string>("");
 
   useEffect(() => {
     getIdTokenClaims()
-      .then((idToken) => setIdToken(idToken))
+      .then((idToken) => setRawIdToken(idToken?.__raw || ""))
       .catch((e) => console.error(e));
   }, [getIdTokenClaims]);
 
@@ -50,7 +50,7 @@ const _: NextPage = () => {
 
     return (
       <>
-        <CodeTextField label="Raw" disabled value={idToken?.__raw} />
+        <CodeTextField label="Raw" disabled value={rawIdToken} />
         <JsonView src={typeof user === "object" ? user : {}} />
       </>
     );
