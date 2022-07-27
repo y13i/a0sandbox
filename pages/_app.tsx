@@ -9,11 +9,29 @@ import "@fontsource/roboto/700.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
+
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import { AppNavigation } from "../components/AppNavigation";
 
 const queryClient = new QueryClient();
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#212121",
+      light: "#484848",
+      dark: "#000",
+      contrastText: "#fff",
+    },
+    secondary: {
+      main: "#5e35b1",
+      light: "#9162e4",
+      dark: "#280680",
+      contrastText: "#fff",
+    },
+  },
+});
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -25,7 +43,7 @@ function App({ Component, pageProps }: AppProps) {
       cacheLocation="localstorage"
     >
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={createTheme()}>
+        <ThemeProvider theme={theme}>
           <CssBaseline />
           <Box sx={{ display: "flex" }}>
             <AppNavigation />

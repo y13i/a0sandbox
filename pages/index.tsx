@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
-import Link from "next/link";
 import Typography from "@mui/material/Typography";
 
 import { WithHead } from "../components/WithHead";
+import { Link } from "../components/Link";
 
 import { usePageAttributes } from "../hooks/usePageAttributes";
 import { appName } from "../src/constants";
