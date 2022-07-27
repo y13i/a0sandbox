@@ -19,10 +19,10 @@ const _: NextPage = () => {
     <WithHead title="Callback" description="Auth0 authentication callback.">
       {error ? (
         <>
-          <Typography variant="h3" gutterBottom>
+          <Typography variant="h5" component="h2" gutterBottom>
             Error: {error}
           </Typography>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h6" component="h3" gutterBottom>
             {error_description}
           </Typography>
         </>

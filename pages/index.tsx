@@ -10,12 +10,12 @@ import { appName } from "../src/constants";
 const _: NextPage = () => {
   return (
     <WithHead title="Home" description="Auth0 testing app.">
-      <Typography variant="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom>
         {appName}
       </Typography>
       {usePageAttributes().map((pa) => (
         <div key={pa.title}>
-          <Typography variant="h2" gutterBottom>
+          <Typography variant="h5" component="h2" gutterBottom>
             <Link href={pa.path} passHref>
               {pa.title}
             </Link>
