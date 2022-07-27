@@ -5,16 +5,15 @@ import Link from "next/link";
 import { styled } from "@mui/material/styles";
 import BaseAppBar, { AppBarProps } from "@mui/material/AppBar";
 import BaseDrawer, { DrawerProps } from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Divider from "@mui/material/Divider";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
-import LoginIcon from "@mui/icons-material/Login";
 
 import { Menu } from "../components/Menu";
+import { LoginStatus } from "./LoginStatus";
 
 const drawerWidth = 240;
 
@@ -92,9 +91,7 @@ export const AppNavigation: FC = (props) => {
           >
             <MenuIcon />
           </IconButton>
-          <Button color="inherit" startIcon={<LoginIcon />}>
-            TODO: Login
-          </Button>
+          <LoginStatus />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" drawerWidth={drawerWidth} open={open}>
