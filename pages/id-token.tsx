@@ -6,10 +6,13 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 
+import { jwtVerify, JWTPayload, ProtectedHeaderParameters } from "jose";
+
 import { CodeTextField } from "../components/CodeTextField";
 import { JsonView } from "../components/JsonView";
 import { WithHead } from "../components/WithHead";
 import { PageAttribute } from "../hooks/usePageAttributes";
+import { jwks } from "../src/constants";
 
 export const pageAttribute: PageAttribute = {
   title: "ID Token",
@@ -23,11 +26,26 @@ const _: NextPage = () => {
     useAuth0();
 
   const [rawIdToken, setRawIdToken] = useState<string>("");
+  const [header, setHeader] = useState<ProtectedHeaderParameters | undefined>(
+    undefined
+  );
+  const [payload, setPayload] = useState<JWTPayload | undefined>(undefined);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       getIdTokenClaims()
-        .then((idToken) => setRawIdToken(idToken?.__raw || ""))
+        .then((idToken) => {
+          const jwt = idToken?.__raw as string;
+          setRawIdToken(jwt || "");
+          return jwt;
+        })
+        .then((jwt) => {
+          return jwtVerify(jwt, jwks);
+        })
+        .then((jwtVerifyResult) => {
+          setHeader(jwtVerifyResult.protectedHeader);
+          setPayload(jwtVerifyResult.payload);
+        })
         .catch((e) => console.error(e));
     }
   }, [isLoading, isAuthenticated, getIdTokenClaims]);
@@ -39,7 +57,7 @@ const _: NextPage = () => {
 
     if (!isAuthenticated) {
       return (
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h5" component="h2" gutterBottom>
           Authentication required.
         </Typography>
       );
@@ -53,12 +71,30 @@ const _: NextPage = () => {
     return (
       <>
         <CodeTextField label="Raw" disabled value={rawIdToken} />
+        <Typography variant="h6" component="h2" gutterBottom>
+          <code>user</code> from <code>useAuth0()</code>
+        </Typography>
         <JsonView src={typeof user === "object" ? user : {}} />
+        <Typography variant="h6" component="h2" gutterBottom>
+          header
+        </Typography>
+        <JsonView src={typeof header === "object" ? header : {}} />
+        <Typography variant="h6" component="h2" gutterBottom>
+          payload
+        </Typography>
+        <JsonView src={typeof payload === "object" ? payload : {}} />
       </>
     );
   })();
 
-  return <WithHead {...pageAttribute}>{content}</WithHead>;
+  return (
+    <WithHead {...pageAttribute}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        {pageAttribute.title}
+      </Typography>
+      {content}
+    </WithHead>
+  );
 };
 
 export default _;
