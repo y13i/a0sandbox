@@ -20,14 +20,14 @@ connections=$(curl -s --request GET \
   --url "https://${DOMAIN}/api/v2/connections" \
   --header "authorization: Bearer ${access_token}")
   
-default_database_connection_id=$(echo -e $connections \
+default_database_connection_id=$(echo $connections \
   | jq -r '.[] | select(.name == "Username-Password-Authentication") | .id')
 
 curl -s --request DELETE \
   --url "https://${DOMAIN}/api/v2/connections/${default_database_connection_id}" \
   --header "authorization: Bearer ${access_token}"
   
-default_google_connection_id=$(echo -e $connections \
+default_google_connection_id=$(echo $connections \
   | jq -r '.[] | select(.name == "google-oauth2") | .id')
 
 curl -s --request DELETE \
