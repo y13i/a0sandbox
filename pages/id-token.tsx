@@ -67,7 +67,7 @@ const _: NextPage = () => {
       return <JsonView src={{ error: { name, message, cause, stack } }} />;
     }
 
-    const { type, extractable, usages, algorithm } = cryptoKey!;
+    const { type, extractable, usages, algorithm } = cryptoKey || {};
 
     return (
       <>
