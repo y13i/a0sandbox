@@ -31,7 +31,7 @@ resource "auth0_resource_server" "a0sandbox_backend" {
   ]
 
   name       = "a0sandbox Next.js API Routes"
-  identifier = "https://${terraform.workspace}.vercel.app/api/"
+  identifier = "https://${var.project_name}.vercel.app/api/"
 }
 
 resource "auth0_client" "a0sandbox_frontend" {
@@ -43,10 +43,10 @@ resource "auth0_client" "a0sandbox_frontend" {
   app_type                   = "spa"
   token_endpoint_auth_method = "none"
   grant_types                = ["authorization_code"]
-  initiate_login_uri         = "https://${terraform.workspace}.vercel.app/login"
-  callbacks                  = ["https://${terraform.workspace}.vercel.app/callback", "http://localhost:3000/callback"]
-  allowed_logout_urls        = ["https://${terraform.workspace}.vercel.app/", "http://localhost:3000/"]
-  web_origins                = ["https://${terraform.workspace}.vercel.app", "http://localhost:3000"]
+  initiate_login_uri         = "https://${var.project_name}.vercel.app/login"
+  callbacks                  = ["https://${var.project_name}.vercel.app/callback", "http://localhost:3000/callback"]
+  allowed_logout_urls        = ["https://${var.project_name}.vercel.app/", "http://localhost:3000/"]
+  web_origins                = ["https://${var.project_name}.vercel.app", "http://localhost:3000"]
 
   jwt_configuration {
     alg = "RS256"

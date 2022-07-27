@@ -3,7 +3,7 @@ provider "vercel" {
 }
 
 resource "vercel_project" "default" {
-  name      = terraform.workspace
+  name      = var.project_name
   framework = "nextjs"
 
 
@@ -25,7 +25,7 @@ resource "vercel_project" "default" {
     },
     {
       key    = "NEXT_PUBLIC_BASE_URI"
-      value  = "https://${terraform.workspace}.vercel.app"
+      value  = "https://${var.project_name}.vercel.app"
       target = ["production"]
     },
   ]
@@ -37,5 +37,5 @@ resource "vercel_deployment" "initial_deploy" {
 }
 
 output "project_url" {
-  value = "https://${terraform.workspace}.vercel.app/"
+  value = "https://${var.project_name}.vercel.app/"
 }
