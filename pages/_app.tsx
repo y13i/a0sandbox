@@ -21,6 +21,8 @@ function App({ Component, pageProps }: AppProps) {
       domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
       clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
       redirectUri={`${process.env.NEXT_PUBLIC_BASE_URI!}/callback`}
+      useRefreshTokens={true}
+      cacheLocation="localstorage"
     >
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={createTheme()}>
