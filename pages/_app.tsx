@@ -16,6 +16,7 @@ import { AppNavigation } from "../components/AppNavigation";
 
 const queryClient = new QueryClient();
 
+// https://material.io/resources/color/
 const theme = createTheme({
   palette: {
     primary: {
