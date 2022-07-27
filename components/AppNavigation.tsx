@@ -19,7 +19,7 @@ import { Menu } from "../components/Menu";
 const drawerWidth = 240;
 
 const AppBar = styled(BaseAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== "drawerWidth" && prop !== "open",
 })<AppBarProps & { drawerWidth: number; open: boolean }>(
   ({ theme, drawerWidth, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
@@ -39,7 +39,7 @@ const AppBar = styled(BaseAppBar, {
 );
 
 const Drawer = styled(BaseDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== "drawerWidth" && prop !== "open",
 })<DrawerProps & { drawerWidth: number; open: boolean }>(
   ({ theme, drawerWidth, open }) => ({
     "& .MuiDrawer-paper": {
