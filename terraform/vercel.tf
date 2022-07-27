@@ -31,6 +31,11 @@ resource "vercel_project" "default" {
   ]
 }
 
+resource "vercel_deployment" "initial_deploy" {
+  project_id = vercel_project.default.id
+  ref        = "main"
+}
+
 output "project_url" {
   value = "https://${terraform.workspace}.vercel.app/"
 }
