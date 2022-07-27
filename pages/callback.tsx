@@ -7,22 +7,28 @@ import { WithHead } from "../components/WithHead";
 
 const _: NextPage = () => {
   const router = useRouter();
-  const { isReady, returnTo, error, error_description } = router.query;
+  const { returnTo, error, error_description } = router.query;
 
   useEffect(() => {
-    if (isReady && !error) {
-      router.replace((returnTo as string | undefined) ?? "/");
+    if (router.isReady && !error) {
+      router.push((returnTo as string | undefined) ?? "/");
     }
-  }, [router, isReady, returnTo, error]);
+  }, [router, returnTo, error]);
 
   return (
     <WithHead title="Callback" description="Auth0 authentication callback.">
-      <Typography variant="h3" gutterBottom>
-        Error: {error}
-      </Typography>
-      <Typography variant="h4" gutterBottom>
-        {error_description}
-      </Typography>
+      {error ? (
+        <>
+          <Typography variant="h3" gutterBottom>
+            Error: {error}
+          </Typography>
+          <Typography variant="h4" gutterBottom>
+            {error_description}
+          </Typography>
+        </>
+      ) : (
+        <></>
+      )}
     </WithHead>
   );
 };
