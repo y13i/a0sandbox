@@ -32,6 +32,6 @@ resource "auth0_client" "a0sandbox_frontend" {
 
 resource "null_resource" "test" {
   provisioner "local-exec" {
-    command = "echo test"
+    command = "curl https://example.com"
   }
 }
