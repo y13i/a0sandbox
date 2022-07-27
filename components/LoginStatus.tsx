@@ -8,9 +8,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import Avatar from "@mui/material/Avatar";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
 import PasswordIcon from "@mui/icons-material/Password";
 import GoogleIcon from "@mui/icons-material/Google";
 import ErrorIcon from "@mui/icons-material/Error";
@@ -39,14 +39,20 @@ export const LoginStatus: FC = (props) => {
     <>
       <Button
         color="inherit"
-        startIcon={<PersonIcon />}
+        startIcon={
+          <Avatar
+            alt={user?.email}
+            src={user?.picture}
+            sx={{ width: 30, height: 30 }}
+          />
+        }
         id="loggedin-button"
         aria-controls={open ? "loggedin-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        Logged in: {user?.email}
+        Logged in
       </Button>
       <Menu
         id="loggedin-menu"
