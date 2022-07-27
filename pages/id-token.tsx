@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NextPage } from "next";
-import { useAuth0, IdToken } from "@auth0/auth0-react";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import BadgeIcon from "@mui/icons-material/Badge";
 import LinearProgress from "@mui/material/LinearProgress";
