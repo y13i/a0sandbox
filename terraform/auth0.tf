@@ -5,8 +5,9 @@ provider "auth0" {
 }
 
 resource "auth0_connection" "default" {
-  name     = "a0sandbox-default"
-  strategy = "auth0"
+  name            = "a0sandbox-default"
+  strategy        = "auth0"
+  enabled_clients = [auth0_client.a0sandbox_frontend.id]
 }
 
 resource "auth0_resource_server" "a0sandbox_backend" {
