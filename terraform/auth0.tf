@@ -3,19 +3,42 @@ provider "auth0" {
   client_id     = var.auth0_client_id
   client_secret = var.auth0_client_secret
 }
+resource "null_resource" "delete_default_resources" {
+  provisioner "local-exec" {
+    command = file("./auth0/delete_default_resources.sh")
+
+    environment = {
+      DOMAIN        = var.auth0_domain
+      CLIENT_ID     = var.auth0_client_id
+      CLIENT_SECRET = var.auth0_client_secret
+    }
+  }
+}
 
 resource "auth0_connection" "default" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
   name            = "a0sandbox-default"
   strategy        = "auth0"
   enabled_clients = [auth0_client.a0sandbox_frontend.id]
 }
 
 resource "auth0_resource_server" "a0sandbox_backend" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
   name       = "a0sandbox Next.js API Routes"
   identifier = "https://${terraform.workspace}.vercel.app/api/"
 }
 
 resource "auth0_client" "a0sandbox_frontend" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
   name                       = "a0sandbox Next.js Frontend"
   app_type                   = "spa"
   token_endpoint_auth_method = "none"
@@ -27,17 +50,5 @@ resource "auth0_client" "a0sandbox_frontend" {
 
   jwt_configuration {
     alg = "RS256"
-  }
-}
-
-resource "null_resource" "delete_default_resources" {
-  provisioner "local-exec" {
-    command = file("./auth0/delete_default_resources.sh")
-
-    environment = {
-      DOMAIN        = var.auth0_domain
-      CLIENT_ID     = var.auth0_client_id
-      CLIENT_SECRET = var.auth0_client_secret
-    }
   }
 }
