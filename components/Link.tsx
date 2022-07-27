@@ -8,8 +8,8 @@ export const Link: FC<
     underline?: "none" | "hover" | "always";
     sx?: SxProps;
   }
-> = (props) => (
-  <NextLink {...props} passHref>
+> = (props) => {
+  const muiLink = (
     <MuiLink
       target={props.target || "_self"}
       rel="noopener noreferrer"
@@ -19,5 +19,13 @@ export const Link: FC<
     >
       {props.children}
     </MuiLink>
-  </NextLink>
-);
+  );
+
+  return props.href.toString().match(/^https?:\/\//) ? (
+    muiLink
+  ) : (
+    <NextLink {...props} passHref>
+      {muiLink}
+    </NextLink>
+  );
+};
