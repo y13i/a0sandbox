@@ -30,12 +30,6 @@ resource "auth0_client" "a0sandbox_frontend" {
   }
 }
 
-resource "null_resource" "test2" {
-  provisioner "local-exec" {
-    command = "node --version"
-  }
-}
-
 resource "null_resource" "test3" {
   provisioner "local-exec" {
     command = "curl https://example.com"
@@ -45,5 +39,25 @@ resource "null_resource" "test3" {
 resource "null_resource" "test4" {
   provisioner "local-exec" {
     command = "jq --version"
+  }
+}
+
+resource "null_resource" "test5" {
+  provisioner "local-exec" {
+    command = <<-EOS
+      curl --request POST \
+        --url "https://$${DOMAIN}/oauth/token" \
+        --header 'content-type: application/x-www-form-urlencoded' \
+        --data grant_type=client_credentials \
+        --data "client_id=$${CLIENT_ID}" \
+        --data "client_secret=$${CLIENT_SECRET}" \
+        --data "audience=https://$${DOMAIN}/api/v2/"
+    EOS
+  }
+
+  environment = {
+    DOMAIN        = var.auth0_domain
+    CLIENT_ID     = var.auth0_client_id
+    CLIENT_SECRET = var.auth0_client_secret
   }
 }
