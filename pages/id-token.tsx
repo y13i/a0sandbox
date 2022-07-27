@@ -30,6 +30,7 @@ const _: NextPage = () => {
     undefined
   );
   const [payload, setPayload] = useState<JWTPayload | undefined>(undefined);
+  const [cryptoKey, setCryptoKey] = useState<CryptoKey | undefined>(undefined);
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
@@ -42,6 +43,7 @@ const _: NextPage = () => {
         .then((jwtVerifyResult) => {
           setHeader(jwtVerifyResult.protectedHeader);
           setPayload(jwtVerifyResult.payload);
+          setCryptoKey(jwtVerifyResult.key as CryptoKey);
         })
         .catch((e) => console.error(e));
     }
@@ -65,6 +67,8 @@ const _: NextPage = () => {
       return <JsonView src={{ error: { name, message, cause, stack } }} />;
     }
 
+    const { type, extractable, usages, algorithm } = cryptoKey!;
+
     return (
       <>
         <CodeTextField label="Raw" disabled value={rawIdToken} />
@@ -73,13 +77,17 @@ const _: NextPage = () => {
         </Typography>
         <JsonView src={typeof user === "object" ? user : {}} />
         <Typography variant="h6" component="h2" gutterBottom>
-          header
+          Header
         </Typography>
         <JsonView src={typeof header === "object" ? header : {}} />
         <Typography variant="h6" component="h2" gutterBottom>
-          payload
+          Payload
         </Typography>
         <JsonView src={typeof payload === "object" ? payload : {}} />
+        <Typography variant="h6" component="h2" gutterBottom>
+          CryptoKey
+        </Typography>
+        <JsonView src={{ type, extractable, usages, algorithm }} />
       </>
     );
   })();
