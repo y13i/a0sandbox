@@ -13,6 +13,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import PasswordIcon from "@mui/icons-material/Password";
 import GoogleIcon from "@mui/icons-material/Google";
+import ErrorIcon from "@mui/icons-material/Error";
 
 export const LoginStatus: FC = (props) => {
   const router = useRouter();
@@ -127,6 +128,19 @@ export const LoginStatus: FC = (props) => {
             <GoogleIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>google-oauth2</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() =>
+            loginWithRedirect({
+              ...baseLoginOptions,
+              connection: "invalid",
+            })
+          }
+        >
+          <ListItemIcon>
+            <ErrorIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>invalid</ListItemText>
         </MenuItem>
       </Menu>
     </>
