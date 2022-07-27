@@ -1,7 +1,7 @@
-import { Token } from "@mui/icons-material";
 import { ReactNode } from "react";
 
 import { pageAttribute as idToken } from "../pages/id-token";
+import { pageAttribute as jwks } from "../pages/jwks";
 
 export type PageAttribute = {
   title: string;
@@ -11,5 +11,5 @@ export type PageAttribute = {
 };
 
 export function usePageAttributes(): PageAttribute[] {
-  return [idToken];
+  return [idToken, jwks];
 }

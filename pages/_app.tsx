@@ -32,6 +32,8 @@ const theme = createTheme({
       contrastText: "#fff",
     },
   },
+
+  components: { MuiLinearProgress: { defaultProps: { color: "secondary" } } },
 });
 
 function App({ Component, pageProps }: AppProps) {
