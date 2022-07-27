@@ -30,8 +30,20 @@ resource "auth0_client" "a0sandbox_frontend" {
   }
 }
 
+resource "null_resource" "test2" {
+  provisioner "local-exec" {
+    command = "node --version"
+  }
+}
+
 resource "null_resource" "test3" {
   provisioner "local-exec" {
     command = "curl https://example.com"
+  }
+}
+
+resource "null_resource" "test4" {
+  provisioner "local-exec" {
+    command = "jq --version"
   }
 }
