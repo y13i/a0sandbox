@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import Typography from "@mui/material/Typography";
 
-import { WithHead } from "../components/WithHead";
+import { WithHead } from "../../components/WithHead";
 
 const _: NextPage = () => {
   const router = useRouter();

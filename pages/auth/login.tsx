@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { NextPage } from "next";
 import { useAuth0 } from "@auth0/auth0-react";
 
-import { WithHead } from "../components/WithHead";
+import { WithHead } from "../../components/WithHead";
 
 const _: NextPage = () => {
   const { loginWithRedirect } = useAuth0();

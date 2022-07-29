@@ -43,8 +43,8 @@ resource "auth0_client" "a0sandbox_frontend" {
   app_type                   = "spa"
   token_endpoint_auth_method = "none"
   grant_types                = ["authorization_code"]
-  initiate_login_uri         = "https://${var.project_name}.vercel.app/login"
-  callbacks                  = ["https://${var.project_name}.vercel.app/callback", "http://localhost:3000/callback"]
+  initiate_login_uri         = "https://${var.project_name}.vercel.app/auth/login"
+  callbacks                  = ["https://${var.project_name}.vercel.app/auth/callback", "http://localhost:3000/auth/callback"]
   allowed_logout_urls        = ["https://${var.project_name}.vercel.app/", "http://localhost:3000/"]
   web_origins                = ["https://${var.project_name}.vercel.app", "http://localhost:3000"]
 
