@@ -18,7 +18,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 export const LoginStatus: FC = (props) => {
   const router = useRouter();
   const baseLoginOptions = {
-    redirectUri: `${process.env.NEXT_PUBLIC_BASE_URI!}/callback?returnTo=${
+    redirectUri: `${process.env.NEXT_PUBLIC_BASE_URI!}/auth/callback?returnTo=${
       router.pathname
     }`,
   };

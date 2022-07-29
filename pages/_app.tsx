@@ -41,7 +41,7 @@ function App({ Component, pageProps }: AppProps) {
     <Auth0Provider
       domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
       clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
-      redirectUri={`${process.env.NEXT_PUBLIC_BASE_URI!}/callback`}
+      redirectUri={`${process.env.NEXT_PUBLIC_BASE_URI!}/auth/callback`}
       useRefreshTokens={true}
       cacheLocation="localstorage"
     >
