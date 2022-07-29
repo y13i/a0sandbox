@@ -45,6 +45,7 @@ const Drawer = styled(BaseDrawer, {
       position: "relative",
       whiteSpace: "nowrap",
       width: drawerWidth,
+      height: "100%",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,

@@ -12,6 +12,8 @@ import Box from "@mui/material/Box";
 
 import { Auth0Provider } from "@auth0/auth0-react";
 
+import "../src/global.css";
+
 import { AppNavigation } from "../components/AppNavigation";
 
 const queryClient = new QueryClient();
@@ -48,7 +50,7 @@ function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", height: "100%" }}>
             <AppNavigation />
             <Box
               component="main"
