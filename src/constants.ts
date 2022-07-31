@@ -6,3 +6,6 @@ export const appName = packageInfo.name;
 // prettier-ignore
 export const jwksUrl = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}/.well-known/jwks.json`;
 export const jwks = createRemoteJWKSet(new URL(jwksUrl));
+
+// prettier-ignore
+export const managementApiBaseUrl = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}/api/v2/`;
