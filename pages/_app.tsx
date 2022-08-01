@@ -47,6 +47,7 @@ function App({ Component, pageProps }: AppProps) {
       redirectUri={`${baseUri}/auth/callback`}
       useRefreshTokens={true}
       cacheLocation="localstorage"
+      audience={`${baseUri}/api/`}
     >
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>

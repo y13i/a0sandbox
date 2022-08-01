@@ -40,10 +40,16 @@ const _: NextPage = () => {
   } = useQuery(
     "managementApiUser",
     async () => {
-      const accessToken = await getAccessTokenSilently({
-        audience: managementApi.defaults.baseURL,
-        scope: "read:current_user update:current_user_metadata",
-      });
+      let accessToken;
+
+      try {
+        accessToken = await getAccessTokenSilently({
+          audience: managementApi.defaults.baseURL,
+          scope: "read:current_user update:current_user_metadata",
+        });
+      } catch (e) {
+        console.error(e);
+      }
 
       const { data } = await managementApi.get(`/users/${user?.sub}`, {
         headers: { authorization: `Bearer ${accessToken}` },
