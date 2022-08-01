@@ -1,5 +1,6 @@
 import packageInfo from "../package.json";
 import { createRemoteJWKSet } from "jose";
+import axios from "axios";
 
 export const baseUri = process.env.NEXT_PUBLIC_BASE_URI!;
 export const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN!;
@@ -11,5 +12,6 @@ export const appName = packageInfo.name;
 export const jwksUrl = `https://${auth0Domain}/.well-known/jwks.json`;
 export const jwks = createRemoteJWKSet(new URL(jwksUrl));
 
-// prettier-ignore
-export const managementApiBaseUrl = `https://${auth0Domain}/api/v2/`;
+export const managementApi = axios.create({
+  baseURL: `https://${auth0Domain}/api/v2/`,
+});
