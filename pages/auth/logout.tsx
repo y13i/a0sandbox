@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
 
+import { baseUri } from "../../src/constants";
 import { WithHead } from "../../components/WithHead";
 
 const _: NextPage = () => {
@@ -12,7 +13,7 @@ const _: NextPage = () => {
   const { returnTo } = router.query;
 
   useEffect(() => {
-    logout({ returnTo: `${process.env.NEXT_PUBLIC_BASE_URI!}/${returnTo}` });
+    logout({ returnTo: `${baseUri}/${returnTo}` });
   }, [logout, returnTo]);
 
   return (

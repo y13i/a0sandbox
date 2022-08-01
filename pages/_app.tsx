@@ -14,6 +14,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 import "../src/global.css";
 
+import { auth0Domain, auth0ClientId, baseUri } from "../src/constants";
 import { AppNavigation } from "../components/AppNavigation";
 
 const queryClient = new QueryClient();
@@ -39,11 +40,15 @@ const theme = createTheme({
 });
 
 function App({ Component, pageProps }: AppProps) {
+  if (auth0Domain === undefined || auth0ClientId === undefined) {
+    throw new Error("auth0Domain and auth0ClientId must be string");
+  }
+
   return (
     <Auth0Provider
-      domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
-      clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
-      redirectUri={`${process.env.NEXT_PUBLIC_BASE_URI!}/auth/callback`}
+      domain={auth0Domain}
+      clientId={auth0ClientId}
+      redirectUri={`${baseUri}/auth/callback`}
       useRefreshTokens={true}
       cacheLocation="localstorage"
     >

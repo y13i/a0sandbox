@@ -15,12 +15,12 @@ import PasswordIcon from "@mui/icons-material/Password";
 import GoogleIcon from "@mui/icons-material/Google";
 import ErrorIcon from "@mui/icons-material/Error";
 
+import { baseUri } from "../src/constants";
+
 export const LoginStatus: FC = (props) => {
   const router = useRouter();
   const baseLoginOptions = {
-    redirectUri: `${process.env.NEXT_PUBLIC_BASE_URI!}/auth/callback?returnTo=${
-      router.pathname
-    }`,
+    redirectUri: `${baseUri}/auth/callback?returnTo=${router.pathname}`,
   };
   const { isLoading, isAuthenticated, user, loginWithRedirect, logout } =
     useAuth0();
@@ -63,11 +63,7 @@ export const LoginStatus: FC = (props) => {
           "aria-labelledby": "loggedin-button",
         }}
       >
-        <MenuItem
-          onClick={() =>
-            logout({ returnTo: `${process.env.NEXT_PUBLIC_BASE_URI!}/` })
-          }
-        >
+        <MenuItem onClick={() => logout({ returnTo: `${baseUri}/` })}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" />
           </ListItemIcon>
