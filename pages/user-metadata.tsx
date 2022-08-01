@@ -46,7 +46,7 @@ const _: NextPage = () => {
       });
 
       const { data } = await managementApi.get(`/users/${user?.sub}`, {
-        headers: { authorization: `Barerer ${accessToken}` },
+        headers: { authorization: `Bearer ${accessToken}` },
       });
       console.log(data);
       return data;
