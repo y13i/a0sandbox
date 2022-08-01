@@ -1,11 +1,9 @@
 import packageInfo from "../package.json";
 import { createRemoteJWKSet } from "jose";
 
-export const {
-  NEXT_PUBLIC_BASE_URI: baseUri,
-  NEXT_PUBLIC_AUTH0_DOMAIN: auth0Domain,
-  NEXT_PUBLIC_AUTH0_CLIENT_ID: auth0ClientId,
-} = process.env;
+export const baseUri = process.env.NEXT_PUBLIC_BASE_URI!;
+export const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN!;
+export const auth0ClientId = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!;
 
 export const debounceWait = 333;
 export const appName = packageInfo.name;

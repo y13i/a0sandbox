@@ -40,10 +40,6 @@ const theme = createTheme({
 });
 
 function App({ Component, pageProps }: AppProps) {
-  if (auth0Domain === undefined || auth0ClientId === undefined) {
-    throw new Error("auth0Domain and auth0ClientId must be string");
-  }
-
   return (
     <Auth0Provider
       domain={auth0Domain}
