@@ -22,24 +22,31 @@ resource "auth0_connection" "default" {
 
   name            = "a0sandbox-default"
   strategy        = "auth0"
-  enabled_clients = [auth0_client.a0sandbox_frontend.id]
+  enabled_clients = [auth0_client.frontend.id]
 }
 
-resource "auth0_resource_server" "a0sandbox_backend" {
+resource "auth0_resource_server" "backend_vercel" {
   depends_on = [
     null_resource.delete_default_resources
   ]
 
-  name       = "a0sandbox Next.js API Routes"
   identifier = "https://${var.project_name}.vercel.app/api/"
 }
 
-resource "auth0_client" "a0sandbox_frontend" {
+resource "auth0_resource_server" "backend_localhost" {
   depends_on = [
     null_resource.delete_default_resources
   ]
 
-  name                       = "a0sandbox Next.js Frontend"
+  identifier = "http://localhost:3000/api/"
+}
+
+resource "auth0_client" "frontend" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
+  name                       = "Next.js Frontend"
   app_type                   = "spa"
   token_endpoint_auth_method = "none"
   grant_types                = ["authorization_code"]
