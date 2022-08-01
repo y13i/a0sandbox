@@ -20,7 +20,7 @@ resource "vercel_project" "default" {
     },
     {
       key    = "NEXT_PUBLIC_AUTH0_CLIENT_ID"
-      value  = auth0_client.a0sandbox_frontend.client_id
+      value  = auth0_client.frontend.client_id
       target = ["production"]
     },
     {
