@@ -1,19 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NextPage } from "next";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDebouncedCallback } from "use-debounce";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
+import { InteractionProps } from "react-json-view";
 
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import DataObjectIcon from "@mui/icons-material/DataObject";
+import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { CodeTextField } from "../components/CodeTextField";
 import { JsonView } from "../components/JsonView";
 import { WithHead } from "../components/WithHead";
 import { PageAttribute } from "../hooks/usePageAttributes";
-import { managementApi, debounceWait } from "../src/constants";
+import { managementApi, debounceWait, baseUri } from "../src/constants";
 
 export const pageAttribute: PageAttribute = {
   title: "User Metadata",
@@ -22,60 +26,108 @@ export const pageAttribute: PageAttribute = {
   icon: <DataObjectIcon />,
 };
 
+const managementApiAuthConfig = {
+  audience: managementApi.defaults.baseURL,
+  scope: "read:current_user update:current_user_metadata",
+};
+
 const _: NextPage = () => {
   const {
     isLoading: auth0IsLoading,
     isAuthenticated,
     getAccessTokenSilently,
+    loginWithRedirect,
     error: auth0Error,
     user,
   } = useAuth0();
 
+  async function getAccessToken(): Promise<string | undefined> {
+    try {
+      return await getAccessTokenSilently(managementApiAuthConfig);
+    } catch (e: any) {
+      if (e.error === "login_required" || e.error === "consent_required") {
+        loginWithRedirect({
+          ...managementApiAuthConfig,
+          redirectUri: `${baseUri}/auth/callback?returnTo=${pageAttribute.path}`,
+        });
+
+        return;
+      }
+    }
+  }
+
   const {
-    data: managementApiUser,
-    error,
+    data: userMetadata,
+    error: queryError,
     isLoading,
     isFetching,
     refetch,
   } = useQuery(
-    "managementApiUser",
+    "userMetadata",
     async () => {
-      let accessToken;
+      const accessToken = await getAccessToken();
 
-      try {
-        accessToken = await getAccessTokenSilently({
-          audience: managementApi.defaults.baseURL,
-          scope: "read:current_user update:current_user_metadata",
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      if (accessToken === undefined) return;
 
       const { data } = await managementApi.get(`/users/${user?.sub}`, {
         headers: { authorization: `Bearer ${accessToken}` },
       });
-      console.log(data);
-      return data;
+
+      const _ = data.user_metadata || {};
+
+      setNewUserMetadata(undefined);
+      updateJson(_);
+
+      return _;
     },
-    { enabled: !auth0IsLoading && isAuthenticated }
+    {
+      enabled: !auth0IsLoading && isAuthenticated,
+      initialData: {},
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      onSuccess: () => setNewUserMetadata(undefined),
+    }
   );
 
-  const [userMetadata, setUserMetadata] = useState<{}>({});
-  const [json, setJson] = useState<string>("");
+  const mutation = useMutation(async (newTodo) => {
+    const accessToken = await getAccessToken();
+
+    if (accessToken === undefined) return;
+
+    const { data } = await managementApi.put(
+      `/users/${user?.sub}`,
+      { user_metadata: { ...newUserMetadata } },
+      {
+        headers: { authorization: `Bearer ${accessToken}` },
+      }
+    );
+  });
+
+  const [newUserMetadata, setNewUserMetadata] = useState<{} | undefined>(
+    undefined
+  );
+
+  const [json, setJson] = useState<string>("{}");
   const [jsonError, setJsonError] = useState<Error | undefined>(undefined);
 
-  const parseFromJsonDebounced = useDebouncedCallback((newJson: string) => {
+  const handleJsonUpdateDebounced = useDebouncedCallback((newJson: string) => {
     try {
       const newData = JSON.parse(newJson);
-      setUserMetadata(newData);
+      setNewUserMetadata(newData);
       setJsonError(undefined);
     } catch (e) {
       setJsonError(e as Error);
     }
   }, debounceWait);
 
+  const updateJson = (data: any) => setJson(JSON.stringify(data, undefined, 2));
+  const handleJsonViewUpdate = (p: InteractionProps) => {
+    setNewUserMetadata(p.updated_src);
+    updateJson(p.updated_src);
+  };
+
   const content = (() => {
-    if (isLoading) {
+    if (auth0IsLoading || isLoading || isFetching) {
       return <LinearProgress />;
     }
 
@@ -87,13 +139,42 @@ const _: NextPage = () => {
       );
     }
 
-    if (auth0Error) {
-      const { name, message, cause, stack } = auth0Error;
-      return <JsonView src={{ error: { name, message, cause, stack } }} />;
+    const buttons = (
+      <>
+        <Button startIcon={<CloudDownloadIcon />} onClick={() => refetch()}>
+          Refetch
+        </Button>
+        <Button
+          startIcon={<CloudUploadIcon />}
+          onClick={() => mutation.mutate()}
+        >
+          Save
+        </Button>
+      </>
+    );
+
+    if (auth0Error || queryError) {
+      return (
+        <>
+          {buttons}
+          <JsonView
+            src={{
+              auth0Error: {
+                name: auth0Error?.name,
+                message: auth0Error?.message,
+                cause: auth0Error?.cause,
+                stack: auth0Error?.stack,
+              },
+              queryError,
+            }}
+          />
+        </>
+      );
     }
 
     return (
       <>
+        {buttons}
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <CodeTextField
@@ -105,16 +186,20 @@ const _: NextPage = () => {
               onChange={(event) => {
                 const newJson = event.target.value;
                 setJson(newJson);
-                parseFromJsonDebounced(newJson);
+                handleJsonUpdateDebounced(newJson);
               }}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <JsonView
-              src={typeof userMetadata === "object" ? userMetadata : {}}
-              onAdd={(p) => setUserMetadata(p.updated_src)}
-              onEdit={(p) => setUserMetadata(p.updated_src)}
-              onDelete={(p) => setUserMetadata(p.updated_src)}
+              src={
+                typeof newUserMetadata === "object"
+                  ? newUserMetadata
+                  : userMetadata
+              }
+              onAdd={handleJsonViewUpdate}
+              onEdit={handleJsonViewUpdate}
+              onDelete={handleJsonViewUpdate}
             />
           </Grid>
         </Grid>
