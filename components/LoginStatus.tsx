@@ -13,7 +13,6 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PasswordIcon from "@mui/icons-material/Password";
 import GoogleIcon from "@mui/icons-material/Google";
-import ErrorIcon from "@mui/icons-material/Error";
 
 import { baseUri } from "../src/constants";
 
@@ -109,16 +108,16 @@ export const LoginStatus: FC = (props) => {
           onClick={() =>
             loginWithRedirect({
               ...baseLoginOptions,
-              connection: "a0sandbox-default",
+              connection: "db",
             })
           }
         >
           <ListItemIcon>
             <PasswordIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>a0sandbox-default</ListItemText>
+          <ListItemText>db</ListItemText>
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           onClick={() =>
             loginWithRedirect({
               ...baseLoginOptions,
@@ -130,20 +129,7 @@ export const LoginStatus: FC = (props) => {
             <GoogleIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>google-oauth2</ListItemText>
-        </MenuItem>
-        <MenuItem
-          onClick={() =>
-            loginWithRedirect({
-              ...baseLoginOptions,
-              connection: "invalid",
-            })
-          }
-        >
-          <ListItemIcon>
-            <ErrorIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>invalid</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </>
   );

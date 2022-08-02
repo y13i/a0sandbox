@@ -15,12 +15,12 @@ resource "null_resource" "delete_default_resources" {
   }
 }
 
-resource "auth0_connection" "default" {
+resource "auth0_connection" "db" {
   depends_on = [
     null_resource.delete_default_resources
   ]
 
-  name            = "a0sandbox-default"
+  name            = "db"
   strategy        = "auth0"
   enabled_clients = [auth0_client.frontend.id]
 }
