@@ -14,7 +14,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PasswordIcon from "@mui/icons-material/Password";
 import GoogleIcon from "@mui/icons-material/Google";
 
-import { baseUri } from "../src/constants";
+import { baseUri } from "../src/utils";
 
 export const LoginStatus: FC = (props) => {
   const router = useRouter();

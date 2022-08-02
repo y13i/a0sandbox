@@ -19,7 +19,7 @@ import { CodeTextField } from "../components/CodeTextField";
 import { JsonView } from "../components/JsonView";
 import { WithHead } from "../components/WithHead";
 import { PageAttribute } from "../hooks/usePageAttributes";
-import { managementApi, debounceWait, baseUri } from "../src/constants";
+import { managementApi, debounceWait, baseUri } from "../src/utils";
 
 export const pageAttribute: PageAttribute = {
   title: "User Metadata",

@@ -14,7 +14,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 import "../src/global.css";
 
-import { auth0Domain, auth0ClientId, baseUri } from "../src/constants";
+import { auth0Domain, auth0ClientId, baseUri } from "../src/utils";
 import { AppNavigation } from "../components/AppNavigation";
 
 const queryClient = new QueryClient();

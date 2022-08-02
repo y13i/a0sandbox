@@ -5,7 +5,7 @@ import { WithHead } from "../components/WithHead";
 import { Link } from "../components/Link";
 
 import { usePageAttributes } from "../hooks/usePageAttributes";
-import { appName } from "../src/constants";
+import { appName } from "../src/utils";
 
 const _: NextPage = () => {
   return (

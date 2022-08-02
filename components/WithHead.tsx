@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import Head from "next/head";
-import { appName } from "../src/constants";
+import { appName } from "../src/utils";
 
 export type WithHeadProps = {
   title: string;

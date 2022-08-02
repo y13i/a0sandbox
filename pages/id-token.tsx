@@ -12,7 +12,7 @@ import { CodeTextField } from "../components/CodeTextField";
 import { JsonView } from "../components/JsonView";
 import { WithHead } from "../components/WithHead";
 import { PageAttribute } from "../hooks/usePageAttributes";
-import { jwks } from "../src/constants";
+import { jwks } from "../src/utils";
 
 export const pageAttribute: PageAttribute = {
   title: "ID Token",

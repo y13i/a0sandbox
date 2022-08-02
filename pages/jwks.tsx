@@ -11,7 +11,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import { JsonView } from "../components/JsonView";
 import { WithHead } from "../components/WithHead";
 import { PageAttribute } from "../hooks/usePageAttributes";
-import { jwksUrl } from "../src/constants";
+import { jwksUrl } from "../src/utils";
 
 export const pageAttribute: PageAttribute = {
   title: "JWKS",
