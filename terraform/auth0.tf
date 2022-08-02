@@ -54,6 +54,7 @@ resource "auth0_client" "frontend" {
   callbacks                  = ["https://${var.project_name}.vercel.app/auth/callback", "http://localhost.y13i.com:3000/auth/callback"]
   allowed_logout_urls        = ["https://${var.project_name}.vercel.app/", "http://localhost.y13i.com:3000/"]
   web_origins                = ["https://${var.project_name}.vercel.app", "http://localhost.y13i.com:3000"]
+  allowed_origins            = ["https://${var.project_name}.vercel.app", "http://localhost.y13i.com:3000"]
 
   jwt_configuration {
     alg = "RS256"
