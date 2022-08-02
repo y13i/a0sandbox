@@ -114,14 +114,14 @@ const _: NextPage = () => {
         setNewUserMetadata(undefined);
         setSnackbarOpen(true);
         setAlertColor("success");
-        setAlertMessage("Updated successful.");
+        setAlertMessage("Updated successfully.");
         queryClient.invalidateQueries("userMetadata");
       },
       onError: (error) => {
         console.error(error);
         setSnackbarOpen(true);
         setAlertColor("error");
-        setAlertMessage("Updated error!");
+        setAlertMessage("Update error!");
       },
     }
   );
