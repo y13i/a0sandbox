@@ -21,4 +21,6 @@ exports.onExecutePostLogin = async (event, api) => {
     clientId: event.secrets.clientId,
     clientSecret: event.secrets.clientSecret,
   });
+
+  await managementClient.updateAppMetadata({ id: event.user.user_id }, { extensibilityDebug: { ...event.user.app_metadata.extensibilityDebug, "action_post-login": { event } } })
 };
