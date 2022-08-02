@@ -63,6 +63,27 @@ resource "auth0_client" "frontend" {
   }
 }
 
+resource "auth0_client" "extensibility" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
+  name                       = "extensibility"
+  app_type                   = "non_interactive"
+  token_endpoint_auth_method = "client_secret_post"
+  grant_types                = ["client_credentials"]
+
+  jwt_configuration {
+    alg = "RS256"
+  }
+}
+
+resource "auth0_client_grant" "extensibility" {
+  client_id = auth0_client.extensibility.id
+  audience  = "${var.auth0_domain}/api/v2/"
+  scope     = ["read:users", "update:users_app_metadata"]
+}
+
 resource "auth0_action" "post_login" {
   name    = "post-login"
   runtime = "node16"
@@ -72,6 +93,31 @@ resource "auth0_action" "post_login" {
   supported_triggers {
     id      = "post-login"
     version = "v3"
+  }
+
+  dependencies {
+    name    = "auth0"
+    version = "latest"
+  }
+
+  dependencies {
+    name    = "winston"
+    version = "latest"
+  }
+
+  secrets {
+    name  = "domain"
+    value = var.auth0_domain
+  }
+
+  secrets {
+    name  = "client_id"
+    value = auth0_client.extensibility.client_id
+  }
+
+  secrets {
+    name  = "client_secret"
+    value = auth0_client.extensibility.client_secret
   }
 }
 
@@ -84,44 +130,44 @@ resource "auth0_trigger_binding" "post_login" {
   }
 }
 
-resource "auth0_action" "pre_user_registration" {
-  name    = "pre-user-registration"
-  runtime = "node16"
-  code    = file("./auth0/pre_user_registration.js")
-  deploy  = true
+# resource "auth0_action" "pre_user_registration" {
+#   name    = "pre-user-registration"
+#   runtime = "node16"
+#   code    = file("./auth0/pre_user_registration.js")
+#   deploy  = true
 
-  supported_triggers {
-    id      = "pre-user-registration"
-    version = "v2"
-  }
-}
+#   supported_triggers {
+#     id      = "pre-user-registration"
+#     version = "v2"
+#   }
+# }
 
-resource "auth0_trigger_binding" "pre_user_registration" {
-  trigger = "pre-user-registration"
+# resource "auth0_trigger_binding" "pre_user_registration" {
+#   trigger = "pre-user-registration"
 
-  actions {
-    id           = auth0_action.pre_user_registration.id
-    display_name = auth0_action.pre_user_registration.name
-  }
-}
+#   actions {
+#     id           = auth0_action.pre_user_registration.id
+#     display_name = auth0_action.pre_user_registration.name
+#   }
+# }
 
-resource "auth0_action" "post_user_registration" {
-  name    = "post-user-registration"
-  runtime = "node16"
-  code    = file("./auth0/post_user_registration.js")
-  deploy  = true
+# resource "auth0_action" "post_user_registration" {
+#   name    = "post-user-registration"
+#   runtime = "node16"
+#   code    = file("./auth0/post_user_registration.js")
+#   deploy  = true
 
-  supported_triggers {
-    id      = "post-user-registration"
-    version = "v2"
-  }
-}
+#   supported_triggers {
+#     id      = "post-user-registration"
+#     version = "v2"
+#   }
+# }
 
-resource "auth0_trigger_binding" "post_user_registration" {
-  trigger = "post-user-registration"
+# resource "auth0_trigger_binding" "post_user_registration" {
+#   trigger = "post-user-registration"
 
-  actions {
-    id           = auth0_action.post_user_registration.id
-    display_name = auth0_action.post_user_registration.name
-  }
-}
+#   actions {
+#     id           = auth0_action.post_user_registration.id
+#     display_name = auth0_action.post_user_registration.name
+#   }
+# }
