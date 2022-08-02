@@ -85,7 +85,7 @@ resource "auth0_trigger_binding" "post_login" {
 }
 
 resource "auth0_action" "pre_user_registration" {
-  name    = "post-login"
+  name    = "pre-user-registration"
   runtime = "node16"
   code    = file("./auth0/pre_user_registration.js")
   deploy  = true
@@ -106,7 +106,7 @@ resource "auth0_trigger_binding" "pre_user_registration" {
 }
 
 resource "auth0_action" "post_user_registration" {
-  name    = "post-login"
+  name    = "post-user-registration"
   runtime = "node16"
   code    = file("./auth0/post_user_registration.js")
   deploy  = true
