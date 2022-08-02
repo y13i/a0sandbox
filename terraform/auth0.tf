@@ -30,6 +30,7 @@ resource "auth0_resource_server" "backend_vercel" {
     null_resource.delete_default_resources
   ]
 
+  name       = "Next.js Backend (Vercel)"
   identifier = "https://${var.project_name}.vercel.app/api/"
 }
 
@@ -38,6 +39,7 @@ resource "auth0_resource_server" "backend_localhost" {
     null_resource.delete_default_resources
   ]
 
+  name       = "Next.js Backend (localhost)"
   identifier = "http://localhost:3000/api/"
 }
 
