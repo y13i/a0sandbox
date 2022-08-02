@@ -105,12 +105,12 @@ resource "auth0_action" "post_login" {
 
   dependencies {
     name    = "auth0"
-    version = "latest"
+    version = "2.42.0"
   }
 
   dependencies {
     name    = "winston"
-    version = "latest"
+    version = "3.8.1"
   }
 
   secrets {
