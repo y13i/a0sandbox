@@ -79,12 +79,20 @@ resource "auth0_client" "extensibility" {
 }
 
 resource "auth0_client_grant" "extensibility" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
   client_id = auth0_client.extensibility.id
   audience  = "https://${var.auth0_domain}/api/v2/"
   scope     = ["read:users", "update:users_app_metadata"]
 }
 
 resource "auth0_action" "post_login" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
   name    = "post-login"
   runtime = "node16"
   code    = file("./auth0/post_login.js")
@@ -111,17 +119,21 @@ resource "auth0_action" "post_login" {
   }
 
   secrets {
-    name  = "client_id"
+    name  = "clientId"
     value = auth0_client.extensibility.client_id
   }
 
   secrets {
-    name  = "client_secret"
+    name  = "clientSecret"
     value = auth0_client.extensibility.client_secret
   }
 }
 
 resource "auth0_trigger_binding" "post_login" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
   trigger = "post-login"
 
   actions {
@@ -131,6 +143,10 @@ resource "auth0_trigger_binding" "post_login" {
 }
 
 # resource "auth0_action" "pre_user_registration" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
 #   name    = "pre-user-registration"
 #   runtime = "node16"
 #   code    = file("./auth0/pre_user_registration.js")
@@ -143,6 +159,10 @@ resource "auth0_trigger_binding" "post_login" {
 # }
 
 # resource "auth0_trigger_binding" "pre_user_registration" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
 #   trigger = "pre-user-registration"
 
 #   actions {
@@ -152,6 +172,10 @@ resource "auth0_trigger_binding" "post_login" {
 # }
 
 # resource "auth0_action" "post_user_registration" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
 #   name    = "post-user-registration"
 #   runtime = "node16"
 #   code    = file("./auth0/post_user_registration.js")
@@ -164,6 +188,10 @@ resource "auth0_trigger_binding" "post_login" {
 # }
 
 # resource "auth0_trigger_binding" "post_user_registration" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
 #   trigger = "post-user-registration"
 
 #   actions {
