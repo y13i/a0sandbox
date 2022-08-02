@@ -83,3 +83,45 @@ resource "auth0_trigger_binding" "post_login" {
     display_name = auth0_action.post_login.name
   }
 }
+
+resource "auth0_action" "pre_user_registration" {
+  name    = "post-login"
+  runtime = "node16"
+  code    = file("./auth0/pre_user_registration.js")
+  deploy  = true
+
+  supported_triggers {
+    id      = "pre-user-registration"
+    version = "v2"
+  }
+}
+
+resource "auth0_trigger_binding" "pre_user_registration" {
+  trigger = "pre-user-registration"
+
+  actions {
+    id           = auth0_action.pre_user_registration.id
+    display_name = auth0_action.pre_user_registration.name
+  }
+}
+
+resource "auth0_action" "post_user_registration" {
+  name    = "post-login"
+  runtime = "node16"
+  code    = file("./auth0/post_user_registration.js")
+  deploy  = true
+
+  supported_triggers {
+    id      = "post-user-registration"
+    version = "v2"
+  }
+}
+
+resource "auth0_trigger_binding" "post_user_registration" {
+  trigger = "post-user-registration"
+
+  actions {
+    id           = auth0_action.post_user_registration.id
+    display_name = auth0_action.post_user_registration.name
+  }
+}
