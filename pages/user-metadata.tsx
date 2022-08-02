@@ -76,19 +76,17 @@ const _: NextPage = () => {
         headers: { authorization: `Bearer ${accessToken}` },
       });
 
-      const _ = data.user_metadata || {};
-
-      setNewUserMetadata(_);
-      updateJson(_);
-
-      return _;
+      return data.user_metadata || {};
     },
     {
       enabled: !auth0IsLoading && isAuthenticated,
       initialData: {},
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      onSuccess: () => setNewUserMetadata(undefined),
+      onSuccess: (fetchedUserMetadata) => {
+        setNewUserMetadata(fetchedUserMetadata);
+        updateJson(fetchedUserMetadata);
+      },
     }
   );
 
