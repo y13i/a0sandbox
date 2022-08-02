@@ -78,7 +78,7 @@ const _: NextPage = () => {
 
       const _ = data.user_metadata || {};
 
-      setNewUserMetadata(undefined);
+      setNewUserMetadata(_);
       updateJson(_);
 
       return _;
