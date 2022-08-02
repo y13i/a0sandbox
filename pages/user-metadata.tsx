@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useState, SyntheticEvent } from "react";
 import { NextPage } from "next";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useDebouncedCallback } from "use-debounce";
-import { useQuery, useMutation } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { InteractionProps } from "react-json-view";
 
 import Grid from "@mui/material/Grid";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import Alert, { AlertColor } from "@mui/material/Alert";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -26,32 +28,33 @@ export const pageAttribute: PageAttribute = {
   icon: <DataObjectIcon />,
 };
 
-const managementApiAuthConfig = {
-  audience: managementApi.defaults.baseURL,
-  scope: "read:current_user update:current_user_metadata",
-};
-
 const _: NextPage = () => {
+  const queryClient = useQueryClient();
+
   const {
     isLoading: auth0IsLoading,
     isAuthenticated,
     getAccessTokenSilently,
-    loginWithRedirect,
+    getAccessTokenWithPopup,
     error: auth0Error,
     user,
   } = useAuth0();
 
   async function getAccessToken(): Promise<string | undefined> {
+    // https://auth0.com/docs/secure/tokens/access-tokens/get-management-api-tokens-for-single-page-applications
+    const managementApiAuthConfig = {
+      audience: managementApi.defaults.baseURL,
+      scope: "read:current_user update:current_user_metadata",
+    };
+
     try {
-      return await getAccessTokenSilently(managementApiAuthConfig);
+      return await getAccessTokenSilently({ ...managementApiAuthConfig });
     } catch (e: any) {
       if (e.error === "login_required" || e.error === "consent_required") {
-        loginWithRedirect({
+        return await getAccessTokenWithPopup({
           ...managementApiAuthConfig,
           redirectUri: `${baseUri}/auth/callback?returnTo=${pageAttribute.path}`,
         });
-
-        return;
       }
     }
   }
@@ -59,7 +62,7 @@ const _: NextPage = () => {
   const {
     data: userMetadata,
     error: queryError,
-    isLoading,
+    isLoading: queryIsLoading,
     isFetching,
     refetch,
   } = useQuery(
@@ -89,19 +92,40 @@ const _: NextPage = () => {
     }
   );
 
-  const mutation = useMutation(async () => {
-    const accessToken = await getAccessToken();
+  const { mutate } = useMutation(
+    async () => {
+      const accessToken = await getAccessToken();
 
-    if (accessToken === undefined) return;
+      if (accessToken === undefined) return;
 
-    const { data } = await managementApi.patch(
-      `/users/${user?.sub}`,
-      { user_metadata: { ...newUserMetadata } },
-      {
-        headers: { authorization: `Bearer ${accessToken}` },
-      }
-    );
-  });
+      const { data } = await managementApi.patch(
+        `/users/${user?.sub}`,
+        { user_metadata: { ...newUserMetadata } },
+        {
+          headers: { authorization: `Bearer ${accessToken}` },
+        }
+      );
+    },
+    {
+      onMutate: () => {
+        setSnackbarOpen(true);
+        setAlertColor("info");
+        setAlertMessage("Updating...");
+      },
+      onSuccess: () => {
+        setSnackbarOpen(true);
+        setAlertColor("success");
+        setAlertMessage("Updated successful.");
+      },
+      onError: (error) => {
+        console.error(error);
+        setSnackbarOpen(true);
+        setAlertColor("error");
+        setAlertMessage("Updated error!");
+      },
+      onSettled: () => queryClient.invalidateQueries("userMetadata"),
+    }
+  );
 
   const [newUserMetadata, setNewUserMetadata] = useState<{} | undefined>(
     undefined
@@ -126,8 +150,20 @@ const _: NextPage = () => {
     updateJson(p.updated_src);
   };
 
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [alertColor, setAlertColor] = useState<AlertColor>("info");
+  const [alertMessage, setAlertMessage] = useState<string>("alert");
+
+  const handleSnackBarClose = (
+    event?: SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
+    setSnackbarOpen(false);
+  };
+
   const content = (() => {
-    if (auth0IsLoading || isLoading || isFetching) {
+    if (auth0IsLoading || queryIsLoading || isFetching) {
       return <LinearProgress />;
     }
 
@@ -141,13 +177,16 @@ const _: NextPage = () => {
 
     const buttons = (
       <>
-        <Button startIcon={<CloudDownloadIcon />} onClick={() => refetch()}>
+        <Button
+          startIcon={<CloudDownloadIcon />}
+          onClick={() => {
+            setSnackbarOpen(false);
+            refetch();
+          }}
+        >
           Refetch
         </Button>
-        <Button
-          startIcon={<CloudUploadIcon />}
-          onClick={() => mutation.mutate()}
-        >
+        <Button startIcon={<CloudUploadIcon />} onClick={() => mutate()}>
           Save
         </Button>
       </>
@@ -203,6 +242,19 @@ const _: NextPage = () => {
             />
           </Grid>
         </Grid>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackBarClose}
+        >
+          <Alert
+            onClose={handleSnackBarClose}
+            variant="filled"
+            severity={alertColor}
+          >
+            {alertMessage}
+          </Alert>
+        </Snackbar>
       </>
     );
   })();
