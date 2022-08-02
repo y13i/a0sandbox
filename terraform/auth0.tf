@@ -80,7 +80,7 @@ resource "auth0_client" "extensibility" {
 
 resource "auth0_client_grant" "extensibility" {
   client_id = auth0_client.extensibility.id
-  audience  = "${var.auth0_domain}/api/v2/"
+  audience  = "https://${var.auth0_domain}/api/v2/"
   scope     = ["read:users", "update:users_app_metadata"]
 }
 
