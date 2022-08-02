@@ -89,12 +89,12 @@ const _: NextPage = () => {
     }
   );
 
-  const mutation = useMutation(async (newTodo) => {
+  const mutation = useMutation(async () => {
     const accessToken = await getAccessToken();
 
     if (accessToken === undefined) return;
 
-    const { data } = await managementApi.put(
+    const { data } = await managementApi.patch(
       `/users/${user?.sub}`,
       { user_metadata: { ...newUserMetadata } },
       {
