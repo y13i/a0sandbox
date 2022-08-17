@@ -12,6 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PasswordIcon from "@mui/icons-material/Password";
+import BusinessIcon from "@mui/icons-material/Business";
 import GoogleIcon from "@mui/icons-material/Google";
 
 import { baseUri } from "../src/utils";
@@ -116,6 +117,19 @@ export const LoginStatus: FC = (props) => {
             <PasswordIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>db</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() =>
+            loginWithRedirect({
+              ...baseLoginOptions,
+              connection: "saml",
+            })
+          }
+        >
+          <ListItemIcon>
+            <BusinessIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>saml</ListItemText>
         </MenuItem>
         {/* <MenuItem
           onClick={() =>

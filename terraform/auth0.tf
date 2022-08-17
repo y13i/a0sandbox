@@ -63,6 +63,41 @@ resource "auth0_client" "frontend" {
   }
 }
 
+resource "auth0_client" "saml" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
+  name                       = "SAML IdP"
+  app_type                   = "regular_web"
+  token_endpoint_auth_method = "client_secret_post"
+  grant_types                = []
+  callbacks                  = ["https://${var.auth0_domain}/login/callback?connection=saml"]
+
+  addons {
+    samlp {
+      audience = "urn:auth0:${element(split(".", var.auth0_domain), 0)}:saml"
+    }
+  }
+}
+
+# resource "auth0_connection" "saml" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
+#   name            = "saml"
+#   strategy        = "samlp"
+#   enabled_clients = [auth0_client.frontend.id]
+
+#   options {
+#     signing_cert      = auth0_client.saml.signing_keys
+#     sign_in_endpoint  = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
+#     sign_out_endpoint = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
+#     metadata_url      = "https://${var.auth0_domain}/samlp/metadata/${auth0_client.saml.client_id}"
+#   }
+# }
+
 resource "auth0_client" "extensibility" {
   depends_on = [
     null_resource.delete_default_resources
