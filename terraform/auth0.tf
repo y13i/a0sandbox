@@ -22,7 +22,7 @@ resource "auth0_connection" "db" {
 
   name            = "db"
   strategy        = "auth0"
-  enabled_clients = [auth0_client.frontend.id, auth0_client.saml.id]
+  enabled_clients = [auth0_client.frontend.id, auth0_client.saml.id, auth0_client.oidc.id]
 }
 
 resource "auth0_resource_server" "backend_vercel" {
@@ -51,7 +51,7 @@ resource "auth0_client" "frontend" {
   name                       = "Next.js Frontend"
   app_type                   = "spa"
   token_endpoint_auth_method = "none"
-  grant_types                = ["authorization_code"]
+  grant_types                = ["authorization_code", "refresh_token"]
   initiate_login_uri         = "https://${var.project_name}.vercel.app/auth/login"
   callbacks                  = ["https://${var.project_name}.vercel.app/auth/callback", "http://localhost:3000/auth/callback"]
   allowed_logout_urls        = ["https://${var.project_name}.vercel.app/", "http://localhost:3000/"]
@@ -71,7 +71,7 @@ resource "auth0_client" "saml" {
   name                       = "SAML IdP"
   app_type                   = "regular_web"
   token_endpoint_auth_method = "client_secret_post"
-  grant_types                = ["authorization_code"]
+  grant_types                = ["authorization_code", "refresh_token"]
   callbacks                  = ["https://${var.auth0_domain}/login/callback?connection=saml"]
 
   addons {
@@ -107,6 +107,41 @@ resource "auth0_connection" "saml" {
     metadata_url        = "https://${var.auth0_domain}/samlp/metadata/${auth0_client.saml.client_id}"
     signature_algorithm = "rsa-sha256"
     digest_algorithm    = "sha256"
+  }
+}
+
+resource "auth0_client" "oidc" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
+  name                       = "OIDC IdP"
+  app_type                   = "regular_web"
+  token_endpoint_auth_method = "client_secret_post"
+  grant_types                = ["authorization_code", "refresh_token"]
+  callbacks                  = ["https://${var.auth0_domain}/login/callback?connection=oidc"]
+}
+
+resource "auth0_connection" "oidc" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
+
+  name            = "oidc"
+  strategy        = "oidc"
+  enabled_clients = [auth0_client.frontend.id]
+
+  options {
+    authorization_endpoint = "https://${var.auth0_domain}/authorize"
+    client_id              = auth0_client.oidc.client_id
+    client_secret          = auth0_client.oidc.client_secret
+    discovery_url          = "https://${var.auth0_domain}/.well-known/openid-configuration"
+    issuer                 = "https://${var.auth0_domain}/"
+    jwks_uri               = "https://${var.auth0_domain}/.well-known/jwks.json"
+    scope                  = "openid profile email"
+    token_endpoint         = "https://${var.auth0_domain}/oauth/token"
+    type                   = "back_channel"
+    userinfo_endpoint      = "https://${var.auth0_domain}/userinfo"
   }
 }
 

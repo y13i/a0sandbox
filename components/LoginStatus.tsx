@@ -122,6 +122,19 @@ export const LoginStatus: FC = (props) => {
           onClick={() =>
             loginWithRedirect({
               ...baseLoginOptions,
+              connection: "oidc",
+            })
+          }
+        >
+          <ListItemIcon>
+            <BusinessIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>oidc</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() =>
+            loginWithRedirect({
+              ...baseLoginOptions,
               connection: "saml",
             })
           }
