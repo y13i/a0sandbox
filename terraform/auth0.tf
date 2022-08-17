@@ -22,7 +22,7 @@ resource "auth0_connection" "db" {
 
   name            = "db"
   strategy        = "auth0"
-  enabled_clients = [auth0_client.frontend.id]
+  enabled_clients = [auth0_client.frontend.id, auth0_client.saml.id]
 }
 
 resource "auth0_resource_server" "backend_vercel" {
