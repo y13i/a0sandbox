@@ -138,7 +138,7 @@ resource "auth0_connection" "oidc" {
     discovery_url          = "https://${var.auth0_domain}/.well-known/openid-configuration"
     issuer                 = "https://${var.auth0_domain}/"
     jwks_uri               = "https://${var.auth0_domain}/.well-known/jwks.json"
-    scope                  = "openid profile email"
+    scopes                 = ["openid", "profile", "email"]
     token_endpoint         = "https://${var.auth0_domain}/oauth/token"
     type                   = "back_channel"
     userinfo_endpoint      = "https://${var.auth0_domain}/userinfo"
