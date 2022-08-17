@@ -76,27 +76,40 @@ resource "auth0_client" "saml" {
 
   addons {
     samlp {
-      audience = "urn:auth0:${element(split(".", var.auth0_domain), 0)}:saml"
+      audience                       = "urn:auth0:${split(".", var.auth0_domain)[0]}:saml"
+      createUpnClaim                 = true
+      digestAlgorithm                = "sha256"
+      includeAttributeNameFormat     = true
+      lifetimeInSeconds              = 3600
+      logout                         = {}
+      mapIdentities                  = true
+      mapUnknownClaimsAsIs           = true
+      nameIdentifierFormat           = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+      passthroughClaimsWithNoMapping = true
+      signatureAlgorithm             = "rsa-sha256"
+      typedAttributes                = true
     }
   }
 }
 
-# resource "auth0_connection" "saml" {
-#   depends_on = [
-#     null_resource.delete_default_resources
-#   ]
+resource "auth0_connection" "saml" {
+  depends_on = [
+    null_resource.delete_default_resources
+  ]
 
-#   name            = "saml"
-#   strategy        = "samlp"
-#   enabled_clients = [auth0_client.frontend.id]
+  name            = "saml"
+  strategy        = "samlp"
+  enabled_clients = [auth0_client.frontend.id]
 
-#   options {
-#     signing_cert      = auth0_client.saml.signing_keys
-#     sign_in_endpoint  = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
-#     sign_out_endpoint = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
-#     metadata_url      = "https://${var.auth0_domain}/samlp/metadata/${auth0_client.saml.client_id}"
-#   }
-# }
+  options {
+    signing_cert        = auth0_client.saml.signing_keys[0]["cert"]
+    sign_in_endpoint    = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
+    sign_out_endpoint   = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
+    metadata_url        = "https://${var.auth0_domain}/samlp/metadata/${auth0_client.saml.client_id}"
+    signature_algorithm = "rsa-sha256"
+    digest_algorithm    = "sha256"
+  }
+}
 
 resource "auth0_client" "extensibility" {
   depends_on = [
