@@ -76,18 +76,17 @@ resource "auth0_client" "saml" {
 
   addons {
     samlp {
-      audience                       = "urn:auth0:${split(".", var.auth0_domain)[0]}:saml"
-      createUpnClaim                 = true
-      digestAlgorithm                = "sha256"
-      includeAttributeNameFormat     = true
-      lifetimeInSeconds              = 3600
-      logout                         = {}
-      mapIdentities                  = true
-      mapUnknownClaimsAsIs           = true
-      nameIdentifierFormat           = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
-      passthroughClaimsWithNoMapping = true
-      signatureAlgorithm             = "rsa-sha256"
-      typedAttributes                = true
+      audience                           = "urn:auth0:${split(".", var.auth0_domain)[0]}:saml"
+      create_upn_claim                   = true
+      digest_algorithm                   = "sha256"
+      include_attribute_name_format      = true
+      lifetime_in_seconds                = 3600
+      map_identities                     = true
+      map_unknown_claims_as_is           = true
+      name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+      passthrough_claims_with_no_mapping = true
+      signature_algorithm                = "rsa-sha256"
+      typed_attributes                   = true
     }
   }
 }
