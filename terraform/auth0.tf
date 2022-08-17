@@ -120,6 +120,10 @@ resource "auth0_client" "oidc" {
   token_endpoint_auth_method = "client_secret_post"
   grant_types                = ["authorization_code", "refresh_token"]
   callbacks                  = ["https://${var.auth0_domain}/login/callback?connection=oidc"]
+
+  jwt_configuration {
+    alg = "RS256"
+  }
 }
 
 resource "auth0_connection" "oidc" {
