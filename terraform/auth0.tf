@@ -71,7 +71,7 @@ resource "auth0_client" "saml" {
   name                       = "SAML IdP"
   app_type                   = "regular_web"
   token_endpoint_auth_method = "client_secret_post"
-  grant_types                = []
+  grant_types                = ["authorization_code"]
   callbacks                  = ["https://${var.auth0_domain}/login/callback?connection=saml"]
 
   addons {
@@ -103,7 +103,7 @@ resource "auth0_connection" "saml" {
   options {
     signing_cert        = auth0_client.saml.signing_keys[0]["cert"]
     sign_in_endpoint    = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
-    sign_out_endpoint   = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}"
+    sign_out_endpoint   = "https://${var.auth0_domain}/samlp/${auth0_client.saml.client_id}/logout"
     metadata_url        = "https://${var.auth0_domain}/samlp/metadata/${auth0_client.saml.client_id}"
     signature_algorithm = "rsa-sha256"
     digest_algorithm    = "sha256"
