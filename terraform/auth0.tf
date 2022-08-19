@@ -99,6 +99,7 @@ resource "auth0_connection" "saml" {
   name            = "saml"
   strategy        = "samlp"
   enabled_clients = [auth0_client.frontend.id]
+  show_as_button  = true
 
   options {
     signing_cert        = auth0_client.saml.signing_keys[0]["cert"]
@@ -134,6 +135,7 @@ resource "auth0_connection" "oidc" {
   name            = "oidc"
   strategy        = "oidc"
   enabled_clients = [auth0_client.frontend.id]
+  show_as_button  = true
 
   options {
     authorization_endpoint = "https://${var.auth0_domain}/authorize"
