@@ -35,7 +35,7 @@ const _: NextPage = () => {
     isLoading: auth0IsLoading,
     isAuthenticated,
     getAccessTokenSilently,
-    loginWithRedirect,
+    getAccessTokenWithPopup,
     error: auth0Error,
     user,
   } = useAuth0();
@@ -51,10 +51,7 @@ const _: NextPage = () => {
       return await getAccessTokenSilently({ ...managementApiAuthConfig });
     } catch (e: any) {
       if (e.error === "login_required" || e.error === "consent_required") {
-        await loginWithRedirect({
-          ...managementApiAuthConfig,
-          redirectUri: `${baseUri}/auth/callback?returnTo=${pageAttribute.path}`,
-        });
+        return await getAccessTokenWithPopup({ ...managementApiAuthConfig });
       }
     }
   }
