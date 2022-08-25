@@ -133,6 +133,7 @@ resource "auth0_connection" "oidc" {
   ]
 
   name            = "oidc"
+  display_name    = "oidc"
   strategy        = "oidc"
   enabled_clients = [auth0_client.frontend.id]
   show_as_button  = true
@@ -230,85 +231,85 @@ resource "auth0_trigger_binding" "post_login" {
   }
 }
 
-# resource "auth0_action" "pre_user_registration" {
-#   depends_on = [
-#     null_resource.delete_default_resources
-#   ]
-
-#   name    = "pre-user-registration"
-#   runtime = "node16"
-#   code    = file("./auth0/pre_user_registration.js")
-#   deploy  = true
-
-#   supported_triggers {
-#     id      = "pre-user-registration"
-#     version = "v2"
-#   }
-# }
-
-# resource "auth0_trigger_binding" "pre_user_registration" {
-#   depends_on = [
-#     null_resource.delete_default_resources
-#   ]
-
-#   trigger = "pre-user-registration"
-
-#   actions {
-#     id           = auth0_action.pre_user_registration.id
-#     display_name = auth0_action.pre_user_registration.name
-#   }
-# }
-
-resource "auth0_action" "post_user_registration" {
+resource "auth0_action" "pre_user_registration" {
   depends_on = [
     null_resource.delete_default_resources
   ]
 
-  name    = "post-user-registration"
+  name    = "pre-user-registration"
   runtime = "node16"
-  code    = file("./auth0/post_user_registration.js")
+  code    = file("./auth0/pre_user_registration.js")
   deploy  = true
 
   supported_triggers {
-    id      = "post-user-registration"
+    id      = "pre-user-registration"
     version = "v2"
-  }
-
-  dependencies {
-    name    = "auth0"
-    version = "2.42.0"
-  }
-
-  dependencies {
-    name    = "winston"
-    version = "3.8.1"
-  }
-
-  secrets {
-    name  = "domain"
-    value = var.auth0_domain
-  }
-
-  secrets {
-    name  = "clientId"
-    value = auth0_client.extensibility.client_id
-  }
-
-  secrets {
-    name  = "clientSecret"
-    value = auth0_client.extensibility.client_secret
   }
 }
 
-resource "auth0_trigger_binding" "post_user_registration" {
+resource "auth0_trigger_binding" "pre_user_registration" {
   depends_on = [
     null_resource.delete_default_resources
   ]
 
-  trigger = "post-user-registration"
+  trigger = "pre-user-registration"
 
   actions {
-    id           = auth0_action.post_user_registration.id
-    display_name = auth0_action.post_user_registration.name
+    id           = auth0_action.pre_user_registration.id
+    display_name = auth0_action.pre_user_registration.name
   }
 }
+
+# resource "auth0_action" "post_user_registration" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
+#   name    = "post-user-registration"
+#   runtime = "node16"
+#   code    = file("./auth0/post_user_registration.js")
+#   deploy  = true
+
+#   supported_triggers {
+#     id      = "post-user-registration"
+#     version = "v2"
+#   }
+
+#   dependencies {
+#     name    = "auth0"
+#     version = "2.42.0"
+#   }
+
+#   dependencies {
+#     name    = "winston"
+#     version = "3.8.1"
+#   }
+
+#   secrets {
+#     name  = "domain"
+#     value = var.auth0_domain
+#   }
+
+#   secrets {
+#     name  = "clientId"
+#     value = auth0_client.extensibility.client_id
+#   }
+
+#   secrets {
+#     name  = "clientSecret"
+#     value = auth0_client.extensibility.client_secret
+#   }
+# }
+
+# resource "auth0_trigger_binding" "post_user_registration" {
+#   depends_on = [
+#     null_resource.delete_default_resources
+#   ]
+
+#   trigger = "post-user-registration"
+
+#   actions {
+#     id           = auth0_action.post_user_registration.id
+#     display_name = auth0_action.post_user_registration.name
+#   }
+# }

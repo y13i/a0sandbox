@@ -22,7 +22,7 @@ exports.onExecutePostUserRegistration = async (event, api) => {
     clientSecret: event.secrets.clientSecret,
   });
 
-  logger.debug("onExecutePostLogin", { event });
+  logger.debug("onExecutePostUserRegistration", { event });
 
   await managementClient.updateAppMetadata(
     { id: event.user.user_id },
