@@ -35,7 +35,10 @@ exports.onExecutePostLogin = async (event, api) => {
             secrets: "REDUCTED",
             user: {
               ...event.user,
-              app_metadata: { ...event.user.app_metadata, extensibilityDebug: "REDUCTED" }
+              app_metadata: {
+                ...event.user.app_metadata,
+                extensibilityDebug: "REDUCTED" // to avoid infinitely recursive data!
+              }
             }
           }
         }
