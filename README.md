@@ -2,7 +2,7 @@
 
 ## Usage
 
-1. Create a new repo forking this.
+1. Create a new repo templating this.
 2. Create a new workspace on [Terraform Cloud](https://app.terraform.io/) with Version Control Workflow and connect to the repo.
 3. Go to the workspace settings and set the `Terraform Working Directory` to `terraform`.
 4. Create a new tenant on Auth0.
