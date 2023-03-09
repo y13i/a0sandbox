@@ -32,7 +32,7 @@
     "uuid": "8.3.2"
   },
   "devDependencies": {
-    "@types/auth0": "2.35.3",
+    "@types/auth0": "2.35.11",
     "@types/js-yaml": "4.0.5",
     "@types/node": "17.0.12",
     "@types/react": "18.0.26",
